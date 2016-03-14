@@ -33,4 +33,8 @@ public class BusPrediction {
         self.minutes!.append(min)
     }
     
+    public func minutesToString() -> String {
+        return minutes != nil ? minutes!.map { String($0) + "m" }.joinWithSeparator(", ") : ""
+    }
+
 }
