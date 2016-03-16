@@ -10,12 +10,12 @@ import Foundation
 
 public class BusPrediction {
 
-    var directionNum: Int?
-    var directionText: String?
-    var minutes: [Int]?
-    var routeId: String?
-    var tripId: String?
-    var vehicleId: String?
+    public var directionNum: Int?
+    public var directionText: String?
+    public var minutes: [Int]?
+    public var routeId: String?
+    public var tripId: String?
+    public var vehicleId: String?
     
     init(json: JSONValue) {
         self.directionNum = Int(json["DirectionNum"].string!)

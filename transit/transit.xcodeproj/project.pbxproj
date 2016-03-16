@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9BF996A71C738C4100787DB0 /* transit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9BF996A61C738C4100787DB0 /* transit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9BF996AE1C738C4100787DB0 /* transit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF996A31C738C4100787DB0 /* transit.framework */; };
+		9BF996AE1C738C4100787DB0 /* Transit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF996A31C738C4100787DB0 /* Transit.framework */; };
 		9BF996B31C738C4100787DB0 /* transitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF996B21C738C4100787DB0 /* transitTests.swift */; };
 		9BF996BE1C73A3F800787DB0 /* Transit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF996BD1C73A3F800787DB0 /* Transit.swift */; };
 		9BF996CC1C73A43500787DB0 /* BusPrediction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF996BF1C73A43500787DB0 /* BusPrediction.swift */; };
@@ -37,7 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9BF996A31C738C4100787DB0 /* transit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = transit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BF996A31C738C4100787DB0 /* Transit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Transit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BF996A61C738C4100787DB0 /* transit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = transit.h; sourceTree = "<group>"; };
 		9BF996A81C738C4100787DB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9BF996AD1C738C4100787DB0 /* transitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = transitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,7 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9BF996AE1C738C4100787DB0 /* transit.framework in Frameworks */,
+				9BF996AE1C738C4100787DB0 /* Transit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +90,7 @@
 		9BF996A41C738C4100787DB0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9BF996A31C738C4100787DB0 /* transit.framework */,
+				9BF996A31C738C4100787DB0 /* Transit.framework */,
 				9BF996AD1C738C4100787DB0 /* transitTests.xctest */,
 			);
 			name = Products;
@@ -158,9 +158,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		9BF996A21C738C4100787DB0 /* transit */ = {
+		9BF996A21C738C4100787DB0 /* Transit */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9BF996B71C738C4100787DB0 /* Build configuration list for PBXNativeTarget "transit" */;
+			buildConfigurationList = 9BF996B71C738C4100787DB0 /* Build configuration list for PBXNativeTarget "Transit" */;
 			buildPhases = (
 				9BF9969E1C738C4100787DB0 /* Sources */,
 				9BF9969F1C738C4100787DB0 /* Frameworks */,
@@ -171,9 +171,9 @@
 			);
 			dependencies = (
 			);
-			name = transit;
+			name = Transit;
 			productName = transit;
-			productReference = 9BF996A31C738C4100787DB0 /* transit.framework */;
+			productReference = 9BF996A31C738C4100787DB0 /* Transit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		9BF996AC1C738C4100787DB0 /* transitTests */ = {
@@ -224,7 +224,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9BF996A21C738C4100787DB0 /* transit */,
+				9BF996A21C738C4100787DB0 /* Transit */,
 				9BF996AC1C738C4100787DB0 /* transitTests */,
 			);
 		};
@@ -282,7 +282,7 @@
 /* Begin PBXTargetDependency section */
 		9BF996B01C738C4100787DB0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9BF996A21C738C4100787DB0 /* transit */;
+			target = 9BF996A21C738C4100787DB0 /* Transit */;
 			targetProxy = 9BF996AF1C738C4100787DB0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -444,13 +444,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9BF996B71C738C4100787DB0 /* Build configuration list for PBXNativeTarget "transit" */ = {
+		9BF996B71C738C4100787DB0 /* Build configuration list for PBXNativeTarget "Transit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9BF996B81C738C4100787DB0 /* Debug */,
 				9BF996B91C738C4100787DB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9BF996BA1C738C4100787DB0 /* Build configuration list for PBXNativeTarget "transitTests" */ = {
 			isa = XCConfigurationList;
@@ -459,6 +460,7 @@
 				9BF996BC1C738C4100787DB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
