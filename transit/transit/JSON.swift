@@ -96,7 +96,7 @@ public enum JSON : Equatable, CustomStringConvertible {
         }
     }
     
-    init(_ rawValue: AnyObject?) {
+    public init(_ rawValue: AnyObject?) {
         if let value : AnyObject = rawValue {
             switch value {
             case let data as NSData:

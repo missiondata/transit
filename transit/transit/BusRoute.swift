@@ -10,11 +10,11 @@ import Foundation
 
 public class BusRoute {
     
-    var routeId: String?
-    var name: String?
-    var description: String?
+    public var routeId: String?
+    public var name: String?
+    public var description: String?
     
-    init(json: JSONValue) {
+    public init(json: JSONValue) {
         routeId = json["RouteID"].string
         name = json["Name"].string
         description = json["LineDescription"].string

@@ -11,12 +11,12 @@ import CoreLocation
 
 public class BusStop {
     
-    var stopId: String?
-    var location: CLLocation?
-    var name: String?
-    var routes: [String]?
+    public var stopId: String?
+    public var location: CLLocation?
+    public var name: String?
+    public var routes: [String]?
     
-    init(json: JSONValue) {
+    public init(json: JSONValue) {
         stopId = json["StopID"].string
         location = CLLocation(latitude: json["Lat"].double!, longitude: json["Lon"].double!)
         name = json["Name"].string
