@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import transit
+@testable import Transit
 
 class transitTests: XCTestCase {
     
