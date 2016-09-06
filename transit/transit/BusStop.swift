@@ -9,14 +9,14 @@
 import Foundation
 import CoreLocation
 
-public class BusStop {
+open class BusStop {
     
-    public var stopId: String?
-    public var location: CLLocation?
-    public var name: String?
-    public var routes: [String]?
+    open var stopId: String?
+    open var location: CLLocation?
+    open var name: String?
+    open var routes: [String]?
     
-    public init(json: JSONValue) {
+    public init(json: JSON) {
         stopId = json["StopID"].string
         location = CLLocation(latitude: json["Lat"].double!, longitude: json["Lon"].double!)
         name = json["Name"].string

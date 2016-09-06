@@ -11,22 +11,22 @@ import CoreLocation
 
 public extension Transit {
     
-    public func getBusPosition(routeId: String?, lat: Float?, long: Float?, radius: Float?, success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
+    public func getBusPosition(_ routeId: String?, lat: Float?, long: Float?, radius: Float?, success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
         let path = "Bus.svc/json/jBusPositions?RouteId=\(routeId != nil ? routeId! : "")&Lat=\(lat != nil ? "\(lat!)" : "")&Lon=\(long != nil ? "\(long!)" : "")&Radius=\(radius != nil ? "\(radius!)" : "")"
         self.getJSONWithPath(path, baseURL: self.apiURL, success: success, failure: failure)
     }
     
-    public func getBusPathDetails(routeId: String, date: String?, success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
+    public func getBusPathDetails(_ routeId: String, date: String?, success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
         let path = "Bus.svc/json/jRouteDetails?RouteId=\(routeId)&Date=\(date != nil ? date! : "")"
         self.getJSONWithPath(path, baseURL: self.apiURL, success: success, failure: failure)
     }
     
-    public func getBusRoutes(success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
+    public func getBusRoutes(_ success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
         let path = "Bus.svc/json/jRoutes"
         self.getJSONWithPath(path, baseURL: self.apiURL, success: success, failure: failure)
     }
     
-    public func getBusRoutes(success: ([BusRoute]->Void), failure: FailureHandler? = nil) {
+    public func getBusRoutes(_ success: (([BusRoute])->Void), failure: FailureHandler? = nil) {
         let path = "Bus.svc/json/jRoutes"
         self.getJSONWithPath(path, baseURL: self.apiURL,
             success: { (json, response) -> Void in
@@ -40,17 +40,17 @@ public extension Transit {
             }, failure: failure)
     }
     
-    public func getBusSchedule(routeId: String, date: String?, includingVariations: Bool?, success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
+    public func getBusSchedule(_ routeId: String, date: String?, includingVariations: Bool?, success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
         let path = "Bus.svc/json/jRouteSchedule?RouteId=\(routeId)&Date=\(date != nil ? date! : "")&includingVariations=\(includingVariations == true ? "true" : "false")"
         self.getJSONWithPath(path, baseURL: self.apiURL, success: success, failure: failure)
     }
     
-    public func getBusScheduleAtStop(stopId: String, date: String?, success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
+    public func getBusScheduleAtStop(_ stopId: String, date: String?, success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
         let path = "Bus.svc/json/jStopSchedule?StopID=\(stopId)&Date=\(date != nil ? date! : "")"
         self.getJSONWithPath(path, baseURL: self.apiURL, success: success, failure: failure)
     }
     
-    public func getBusStops(location: CLLocation?, radius: Double, success: ([BusStop]-> Void), failure: FailureHandler? = nil) {
+    public func getBusStops(_ location: CLLocation?, radius: Double, success: (([BusStop])-> Void), failure: FailureHandler? = nil) {
         let path: String?
         if location != nil {
             path = "Bus.svc/json/jStops?&Lat=\(location!.coordinate.latitude)&Lon=\(location!.coordinate.longitude)&Radius=\(radius)"
@@ -70,19 +70,19 @@ public extension Transit {
             }, failure: failure)
     }
     
-    public func getNextBusAtStop(stopId: String, success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
+    public func getNextBusAtStop(_ stopId: String, success: JSONSuccessHandler? = nil, failure: FailureHandler? = nil) {
         let path = "NextBusService.svc/json/jPredictions?StopID=\(stopId)"
         self.getJSONWithPath(path, baseURL: self.apiURL, success: success, failure: failure)
     }
     
-    public func getBusPredictions(stopId: String, success: ([BusPrediction])->Void, failure: FailureHandler? = nil) {
+    public func getBusPredictions(_ stopId: String, success: @escaping ([BusPrediction])->Void, failure: FailureHandler? = nil) {
         let path = "NextBusService.svc/json/jPredictions?StopID=\(stopId)"
         self.getJSONWithPath(path, baseURL: self.apiURL,
             success: { (json, response) -> Void in
                 if let arr = json["Predictions"].array {
                     var predictions = [BusPrediction]()
                     for a in arr {
-                        let found = predictions.indexOf({ (bp: BusPrediction) -> Bool in
+                        let found = predictions.index(where: { (bp: BusPrediction) -> Bool in
                             return (bp.routeId == a["RouteID"].string && bp.directionNum == Int(a["DirectionNum"].string!))
                         })
                         if found == nil {

@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class Transit {
-    public typealias JSONSuccessHandler = (json: JSON, response: NSHTTPURLResponse) -> Void
-    public typealias FailureHandler = (error: NSError) -> Void
+open class Transit {
+    public typealias JSONSuccessHandler = (_ json: JSON, _ response: HTTPURLResponse) -> Void
+    public typealias FailureHandler = (_ error: NSError) -> Void
     
     internal struct CallbackNotification {
         static let notificationName = "WmataCallbackNotificationName"
@@ -29,46 +29,38 @@ public class Transit {
     
     // MARK: - Properties
     
-    internal(set) var apiURL: NSURL
+    internal(set) var apiURL: URL
     
-    public var client: WmataClientProtocol
+    open var client: WmataClientProtocol
     
     // MARK: - Initializers
     
     public init(apiKey: String) {
         self.client = WmataAppOnlyClient(apiKey: apiKey)
-        self.apiURL = NSURL(string: "https://api.wmata.com/")!
+        self.apiURL = URL(string: "https://api.wmata.com/")!
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - JSON Requests
     
-    internal func jsonRequestWithPath(path: String, baseURL: NSURL, method: String, success: JSONSuccessHandler? = nil, failure: WmataHTTPRequest.FailureHandler? = nil) -> WmataHTTPRequest {
+    internal func jsonRequestWithPath(_ path: String, baseURL: URL, method: String, success: JSONSuccessHandler? = nil, failure: WmataHTTPRequest.FailureHandler? = nil) -> WmataHTTPRequest {
         
         let jsonSuccessHandler: WmataHTTPRequest.SuccessHandler = {
             data, response in
             
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)) {
-                var error: NSError?
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.utility).async {
                 do {
-                    let jsonResult = try JSON.parseJSONData(data)
-                    dispatch_async(dispatch_get_main_queue()) {
-                        if let success = success {
-                            success(json: jsonResult, response: response)
-                        }
-                    }
-                } catch let error1 as NSError {
-                    error = error1
-                    dispatch_async(dispatch_get_main_queue()) {
-                        if let failure = failure {
-                            failure(error: error!)
-                        }
+                    let jsonResult = try JSON.parse(jsonData: data)
+                    DispatchQueue.main.async {
+                        success?(jsonResult, response)
                     }
                 } catch {
-                    fatalError()
+                    DispatchQueue.main.async {
+                        failure?(NSError())
+                    }
                 }
             }
         }
@@ -81,11 +73,11 @@ public class Transit {
         }
     }
     
-    internal func getJSONWithPath(path: String, baseURL: NSURL, success: JSONSuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest {
+    internal func getJSONWithPath(_ path: String, baseURL: URL, success: JSONSuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest {
         return self.jsonRequestWithPath(path, baseURL: baseURL, method: "GET", success: success, failure: failure)
     }
     
-    internal func postJSONWithPath(path: String, baseURL: NSURL, success: JSONSuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest {
+    internal func postJSONWithPath(_ path: String, baseURL: URL, success: JSONSuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest {
         return self.jsonRequestWithPath(path, baseURL: baseURL, method: "POST", success: success, failure: failure)
     }
     

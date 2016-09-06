@@ -13,12 +13,12 @@ import Foundation
     import AppKit
 #endif
 
-public class WmataHTTPRequest: NSObject, NSURLConnectionDataDelegate {
+open class WmataHTTPRequest: NSObject, NSURLConnectionDataDelegate {
     
-    public typealias SuccessHandler = (data: NSData, response: NSHTTPURLResponse) -> Void
-    public typealias FailureHandler = (error: NSError) -> Void
+    public typealias SuccessHandler = (_ data: Data, _ response: HTTPURLResponse) -> Void
+    public typealias FailureHandler = (_ error: NSError) -> Void
     
-    let URL: NSURL
+    let URL: Foundation.URL
     let HTTPMethod: String
     
     var request: NSMutableURLRequest?
@@ -27,51 +27,51 @@ public class WmataHTTPRequest: NSObject, NSURLConnectionDataDelegate {
     var headers: Dictionary<String, String>
     var encodeParameters: Bool
     
-    var dataEncoding: NSStringEncoding
+    var dataEncoding: String.Encoding
     
-    var timeoutInterval: NSTimeInterval
+    var timeoutInterval: TimeInterval
     
     var HTTPShouldHandleCookies: Bool
     
-    var response: NSHTTPURLResponse!
+    var response: HTTPURLResponse!
     var responseData: NSMutableData
     
     var successHandler: SuccessHandler?
     var failureHandler: FailureHandler?
     
-    public convenience init(URL: NSURL) {
+    public convenience init(URL: Foundation.URL) {
         self.init(URL: URL, method: "GET")
     }
     
-    public init(URL: NSURL, method: String) {
+    public init(URL: Foundation.URL, method: String) {
         self.URL = URL
         self.HTTPMethod = method
         self.headers = [:]
         self.encodeParameters = false
-        self.dataEncoding = NSUTF8StringEncoding
+        self.dataEncoding = String.Encoding.utf8
         self.timeoutInterval = 60
         self.HTTPShouldHandleCookies = false
         self.responseData = NSMutableData()
     }
     
-    public init(request: NSURLRequest) {
+    public init(request: URLRequest) {
         self.request = request as? NSMutableURLRequest
-        self.URL = request.URL!
-        self.HTTPMethod = request.HTTPMethod!
+        self.URL = request.url!
+        self.HTTPMethod = request.httpMethod!
         self.headers = [:]
         self.encodeParameters = true
-        self.dataEncoding = NSUTF8StringEncoding
+        self.dataEncoding = String.Encoding.utf8
         self.timeoutInterval = 60
         self.HTTPShouldHandleCookies = false
         self.responseData = NSMutableData()
     }
     
-    public func start() {
+    open func start() {
         if request == nil {
-            self.request = NSMutableURLRequest(URL: self.URL)
-            self.request!.HTTPMethod = self.HTTPMethod
+            self.request = NSMutableURLRequest(url: self.URL)
+            self.request!.httpMethod = self.HTTPMethod
             self.request!.timeoutInterval = self.timeoutInterval
-            self.request!.HTTPShouldHandleCookies = self.HTTPShouldHandleCookies
+            self.request!.httpShouldHandleCookies = self.HTTPShouldHandleCookies
             
             for (key, value) in headers {
                 self.request!.setValue(value, forHTTPHeaderField: key)
@@ -79,90 +79,67 @@ public class WmataHTTPRequest: NSObject, NSURLConnectionDataDelegate {
             
         }
         
-        dispatch_async(dispatch_get_main_queue()) {
-            self.connection = NSURLConnection(request: self.request!, delegate: self)
+        DispatchQueue.main.async {
+            self.connection = NSURLConnection(request: self.request! as URLRequest, delegate: self)
             self.connection.start()
             
             #if os(iOS)
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+                UIApplication.shared.isNetworkActivityIndicatorVisible = true
             #endif
         }
     }
     
-    public func stop() {
+    open func stop() {
         self.connection.cancel()
     }
     
-    public func connection(connection: NSURLConnection, didReceiveResponse response: NSURLResponse) {
-        self.response = response as? NSHTTPURLResponse
+    open func connection(_ connection: NSURLConnection, didReceive response: URLResponse) {
+        self.response = response as? HTTPURLResponse
         
         self.responseData.length = 0
     }
     
-    public func connection(connection: NSURLConnection, didReceiveData data: NSData) {
-        self.responseData.appendData(data)
+    open func connection(_ connection: NSURLConnection, didReceive data: Data) {
+        self.responseData.append(data)
     }
     
-    public func connection(connection: NSURLConnection, didFailWithError error: NSError) {
+    open func connection(_ connection: NSURLConnection, didFailWithError error: Error) {
         #if os(iOS)
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
         #endif
         
-        self.failureHandler?(error: error)
+        self.failureHandler?(error as NSError)
     }
     
-    public func connectionDidFinishLoading(connection: NSURLConnection) {
+    open func connectionDidFinishLoading(_ connection: NSURLConnection) {
         #if os(iOS)
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
         #endif
         
         if self.response.statusCode >= 400 {
-            let responseString = NSString(data: self.responseData, encoding: self.dataEncoding)
-            let responseErrorCode = WmataHTTPRequest.responseErrorCode(self.responseData) ?? 0
+            let responseString = NSString(data: self.responseData as Data, encoding: self.dataEncoding.rawValue)
+            let responseErrorCode = WmataHTTPRequest.responseErrorCode(self.responseData as Data) ?? 0
             let localizedDescription = WmataHTTPRequest.descriptionForHTTPStatus(self.response.statusCode, responseString: responseString! as String)
             let userInfo = [
                 NSLocalizedDescriptionKey: localizedDescription,
                 "Response-Headers": self.response.allHeaderFields,
-                "Response-ErrorCode": responseErrorCode]
+                "Response-ErrorCode": responseErrorCode] as [String : Any]
             let error = NSError(domain: NSURLErrorDomain, code: self.response.statusCode, userInfo: userInfo as [NSObject : AnyObject])
-            self.failureHandler?(error: error)
+            self.failureHandler?(error)
             return
         }
         
-        self.successHandler?(data: self.responseData, response: self.response)
+        self.successHandler?(self.responseData as Data, self.response)
     }
-    
-    class func stringWithData(data: NSData, encodingName: String?) -> String {
-        var encoding: UInt = NSUTF8StringEncoding
-        
-        if encodingName != nil {
-            let encodingNameString = encodingName! as NSString as CFStringRef
-            encoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding(encodingNameString))
-            
-            if encoding == UInt(kCFStringEncodingInvalidId) {
-                encoding = NSUTF8StringEncoding; // by default
-            }
+
+    class func responseErrorCode(_ data: Data) -> Int? {
+        guard let code = JSON(data)["errors"].array?.first?["code"].integer else {
+            return nil
         }
-        
-        return NSString(data: data, encoding: encoding)! as String
+        return code
     }
     
-    class func responseErrorCode(data: NSData) -> Int? {
-        do {
-            let json: AnyObject = try NSJSONSerialization.JSONObjectWithData(data, options: [])
-            if let dictionary = json as? NSDictionary {
-                if let errors = dictionary["errors"] as? [NSDictionary] {
-                    if let code = errors.first?["code"] as? Int {
-                        return code
-                    }
-                }
-            }
-        } catch _ {
-        }
-        return nil
-    }
-    
-    class func descriptionForHTTPStatus(status: Int, responseString: String) -> String {
+    class func descriptionForHTTPStatus(_ status: Int, responseString: String) -> String {
         var s = "HTTP Status \(status)"
         
         var description: String?

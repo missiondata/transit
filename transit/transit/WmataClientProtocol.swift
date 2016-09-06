@@ -10,7 +10,7 @@ import Foundation
 
 public protocol WmataClientProtocol {
         
-    func get(path: String, baseURL: NSURL, success: WmataHTTPRequest.SuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest
+    func get(_ path: String, baseURL: URL, success: WmataHTTPRequest.SuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest
     
-    func post(path: String, baseURL: NSURL, success: WmataHTTPRequest.SuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest
+    func post(_ path: String, baseURL: URL, success: WmataHTTPRequest.SuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest
 }

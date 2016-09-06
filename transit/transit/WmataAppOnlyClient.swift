@@ -11,15 +11,15 @@ import Foundation
 internal class WmataAppOnlyClient: WmataClientProtocol {
     var apiKey: String
         
-    var dataEncoding: NSStringEncoding
+    var dataEncoding: String.Encoding
     
     init(apiKey: String) {
         self.apiKey = apiKey
-        self.dataEncoding = NSUTF8StringEncoding
+        self.dataEncoding = String.Encoding.utf8
     }
     
-    func get(path: String, baseURL: NSURL, success: WmataHTTPRequest.SuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest {
-        let url = NSURL(string: path, relativeToURL: baseURL)
+    func get(_ path: String, baseURL: URL, success: WmataHTTPRequest.SuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest {
+        let url = URL(string: path, relativeTo: baseURL)
         let method = "GET"
         
         let request = WmataHTTPRequest(URL: url!, method: method)
@@ -32,8 +32,8 @@ internal class WmataAppOnlyClient: WmataClientProtocol {
         return request
     }
     
-    func post(path: String, baseURL: NSURL, success: WmataHTTPRequest.SuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest {
-        let url = NSURL(string: path, relativeToURL: baseURL)
+    func post(_ path: String, baseURL: URL, success: WmataHTTPRequest.SuccessHandler?, failure: WmataHTTPRequest.FailureHandler?) -> WmataHTTPRequest {
+        let url = URL(string: path, relativeTo: baseURL)
         let method = "POST"
         
         let request = WmataHTTPRequest(URL: url!, method: method)
@@ -46,12 +46,12 @@ internal class WmataAppOnlyClient: WmataClientProtocol {
         return request
     }
     
-    class func base64EncodedCredentialsWithKey(key: String, secret: String) -> String {
-        let encodedKey = key.urlEncodedStringWithEncoding(NSUTF8StringEncoding)
-        let encodedSecret = secret.urlEncodedStringWithEncoding(NSUTF8StringEncoding)
+    class func base64EncodedCredentialsWithKey(_ key: String, secret: String) -> String {
+        let encodedKey = key.urlEncodedString()
+        let encodedSecret = secret.urlEncodedString()
         let bearerTokenCredentials = "\(encodedKey):\(encodedSecret)"
-        if let data = bearerTokenCredentials.dataUsingEncoding(NSUTF8StringEncoding) {
-            return data.base64EncodedStringWithOptions([])
+        if let data = bearerTokenCredentials.data(using: String.Encoding.utf8) {
+            return data.base64EncodedString(options: [])
         }
         return String()
     }

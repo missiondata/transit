@@ -26,80 +26,55 @@
 import Foundation
 
 extension String {
-
-    internal func indexOf(sub: String) -> Int? {
-        var pos: Int?
-
-        if let range = self.rangeOfString(sub) {
-            if !range.isEmpty {
-                pos = self.startIndex.distanceTo(range.startIndex)
-            }
+    
+    internal func indexOf(_ sub: String) -> Int? {
+        guard let range = self.range(of: sub), !range.isEmpty else {
+            return nil
         }
-
-        return pos
+        return self.characters.distance(from: self.startIndex, to: range.lowerBound)
     }
-
+    
     internal subscript (r: Range<Int>) -> String {
         get {
-            let startIndex = self.startIndex.advancedBy(r.startIndex)
-            let endIndex = startIndex.advancedBy(r.endIndex - r.startIndex)
-
-            return self[Range(start: startIndex, end: endIndex)]
+            let startIndex = self.characters.index(self.startIndex, offsetBy: r.lowerBound)
+            let endIndex = self.characters.index(startIndex, offsetBy: r.upperBound - r.lowerBound)
+            return self[startIndex..<endIndex]
         }
     }
     
-    func urlEncodedStringWithEncoding(encoding: NSStringEncoding) -> String {
-        let charactersToBeEscaped = ":/?&=;+!@#$()',*" as CFStringRef
-        let charactersToLeaveUnescaped = "[]." as CFStringRef
-
-        let str = self as NSString
-
-        let result = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, str as CFString, charactersToLeaveUnescaped, charactersToBeEscaped, CFStringConvertNSStringEncodingToEncoding(encoding)) as NSString
-
-        return result as String
+    
+    func urlEncodedString(_ encodeAll: Bool = false) -> String {
+        var allowedCharacterSet: CharacterSet = .urlQueryAllowed
+        allowedCharacterSet.remove(charactersIn: "\n:#/?@!$&'()*+,;=")
+        if !encodeAll {
+            allowedCharacterSet.insert(charactersIn: "[]")
+        }
+        return self.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet)!
     }
-
-    func parametersFromQueryString() -> Dictionary<String, String> {
+    
+    var queryStringParameters: Dictionary<String, String> {
         var parameters = Dictionary<String, String>()
-
-        let scanner = NSScanner(string: self)
-
+        
+        let scanner = Scanner(string: self)
+        
         var key: NSString?
         var value: NSString?
-
-        while !scanner.atEnd {
+        
+        while !scanner.isAtEnd {
             key = nil
-            scanner.scanUpToString("=", intoString: &key)
-            scanner.scanString("=", intoString: nil)
-
+            scanner.scanUpTo("=", into: &key)
+            scanner.scanString("=", into: nil)
+            
             value = nil
-            scanner.scanUpToString("&", intoString: &value)
-            scanner.scanString("&", intoString: nil)
-
-            if key != nil && value != nil {
-                parameters.updateValue(value! as String, forKey: key! as String)
+            scanner.scanUpTo("&", into: &value)
+            scanner.scanString("&", into: nil)
+            
+            if let key = key as? String, let value = value as? String {
+                parameters.updateValue(value, forKey: key)
             }
         }
         
         return parameters
     }
-/**
-    TODO: Need workaround for commoncypto- no bridging headers in foundations
-
-    func SHA1DigestWithKey(key: String) -> NSData {
-        let str = self.cStringUsingEncoding(NSUTF8StringEncoding)
-        let strLen = self.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
-        
-        let digestLen = Int(CC_SHA1_DIGEST_LENGTH)
-        let result = UnsafeMutablePointer<Void>.alloc(digestLen)
-        
-        let keyStr = key.cStringUsingEncoding(NSUTF8StringEncoding)!
-        let keyLen = key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)
-
-        CCHmac(CCHmacAlgorithm(kCCHmacAlgSHA1), keyStr, keyLen, str!, strLen, result)
-
-        return NSData(bytes: result, length: digestLen)
-    }
-    */
+    
 }
-

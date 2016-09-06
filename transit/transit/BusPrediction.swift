@@ -8,16 +8,16 @@
 
 import Foundation
 
-public class BusPrediction {
+open class BusPrediction {
 
-    public var directionNum: Int?
-    public var directionText: String?
-    public var minutes: [Int]?
-    public var routeId: String?
-    public var tripId: String?
-    public var vehicleId: String?
+    open var directionNum: Int?
+    open var directionText: String?
+    open var minutes: [Int]?
+    open var routeId: String?
+    open var tripId: String?
+    open var vehicleId: String?
     
-    init(json: JSONValue) {
+    init(json: JSON) {
         self.directionNum = Int(json["DirectionNum"].string!)
         self.directionText = json["DirectionText"].string
         self.addMinutes(json["Minutes"].integer!)
@@ -26,15 +26,15 @@ public class BusPrediction {
         self.vehicleId = json["VehicleID"].string
     }
     
-    public func addMinutes(min: Int) {
+    open func addMinutes(_ min: Int) {
         if self.minutes == nil {
             self.minutes = [Int]()
         }
         self.minutes!.append(min)
     }
     
-    public func minutesToString() -> String {
-        return minutes != nil ? minutes!.map { String($0) + "m" }.joinWithSeparator(", ") : ""
+    open func minutesToString() -> String {
+        return minutes != nil ? minutes!.map { String($0) + "m" }.joined(separator: ", ") : ""
     }
 
 }
