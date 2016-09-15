@@ -26,7 +26,7 @@ public extension Transit {
         self.getJSONWithPath(path, baseURL: self.apiURL, success: success, failure: failure)
     }
     
-    public func getBusRoutes(_ success: (([BusRoute])->Void), failure: FailureHandler? = nil) {
+    public func getBusRoutes(_ success: @escaping (([BusRoute])->Void), failure: FailureHandler? = nil) {
         let path = "Bus.svc/json/jRoutes"
         self.getJSONWithPath(path, baseURL: self.apiURL,
             success: { (json, response) -> Void in
@@ -50,7 +50,7 @@ public extension Transit {
         self.getJSONWithPath(path, baseURL: self.apiURL, success: success, failure: failure)
     }
     
-    public func getBusStops(_ location: CLLocation?, radius: Double, success: (([BusStop])-> Void), failure: FailureHandler? = nil) {
+    public func getBusStops(_ location: CLLocation?, radius: Double, success: @escaping (([BusStop])-> Void), failure: FailureHandler? = nil) {
         let path: String?
         if location != nil {
             path = "Bus.svc/json/jStops?&Lat=\(location!.coordinate.latitude)&Lon=\(location!.coordinate.longitude)&Radius=\(radius)"
