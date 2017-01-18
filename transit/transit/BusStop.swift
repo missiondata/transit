@@ -25,4 +25,12 @@ open class BusStop {
             routes?.append(r.string!)
         }
     }
+    
+    public init(stopId:String?, latitude:Double?, longitude:Double?, name:String?) {
+        self.stopId = stopId
+        self.name = name
+        if latitude != nil && longitude != nil {
+            self.location = CLLocation(latitude: latitude!, longitude: longitude!)
+        }
+    }
 }

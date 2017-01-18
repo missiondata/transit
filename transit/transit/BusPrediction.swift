@@ -26,6 +26,11 @@ open class BusPrediction {
         self.vehicleId = json["VehicleID"].string
     }
     
+    init(directionText:String?, routeId:String?) {
+        self.directionText = directionText
+        self.routeId = routeId
+    }
+    
     open func addMinutes(_ min: Int) {
         if self.minutes == nil {
             self.minutes = [Int]()

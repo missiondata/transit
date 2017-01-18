@@ -19,4 +19,9 @@ open class BusRoute {
         name = json["Name"].string
         description = json["LineDescription"].string
     }
+    
+    public init(routeId:String?, name:String?) {
+        self.routeId = routeId
+        self.name = name
+    }
 }
