@@ -21,8 +21,10 @@ open class BusStop {
         location = CLLocation(latitude: json["Lat"].double!, longitude: json["Lon"].double!)
         name = json["Name"].string
         routes = [String]()
-        for r in json["Routes"].array! {
-            routes?.append(r.string!)
+        if let arr = json["Routes"].array {
+            for r in arr {
+                routes?.append(r.string!)
+            }
         }
     }
     

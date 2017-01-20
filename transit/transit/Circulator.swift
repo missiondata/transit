@@ -56,7 +56,7 @@ public extension Transit {
     }
     
     public func getCirculatorStopDictFor(route:String, success: @escaping([String:[BusStop]])->(), failure:@escaping (Error) -> ()) {
-        Alamofire.request("http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=dc-circulator&r=yellow&terse").response { response in
+        Alamofire.request("http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=dc-circulator&r=\(route)&terse").response { response in
             if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                 let xml = SWXMLHash.parse(utf8Text)
                 do {
@@ -87,8 +87,8 @@ public extension Transit {
         }
     }
     
-    public func getCirculatorPredictionFor(stopdId:String, success: @escaping(BusPrediction) -> (), failure: @escaping(Error)->()) {
-        Alamofire.request("http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=dc-circulator&stopId=0001").response { response in
+    public func getCirculatorPredictionFor(stopId:String, success: @escaping(BusPrediction) -> (), failure: @escaping(Error)->()) {
+        Alamofire.request("http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=dc-circulator&stopId=\(stopId)").response { response in
             if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                 var prediction: BusPrediction?
                 let xml = SWXMLHash.parse(utf8Text)
