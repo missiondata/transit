@@ -41,15 +41,20 @@ public extension Transit {
                 
                 var stops = [BusStop]()
                 let xml = SWXMLHash.parse(utf8Text)
+                var route: String?
                 
                 for elem in xml["body"]["route"].all {
+                    do {
+                        route = try elem.value(ofAttribute: "tag") as String
+                    }
+                    catch { }
                     for s in elem["stop"].all {
                         do {
                             let stopId = try s.value(ofAttribute: "stopId") as String
                             let name = try s.value(ofAttribute: "title") as String
                             let lat = try s.value(ofAttribute: "lat") as Double
                             let lon = try s.value(ofAttribute: "lon") as Double
-                            stops.append(BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name, circulator: true))
+                            stops.append(BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name, circulator: true, route: route))
                         }
                         catch {
                             debugPrint(error)
@@ -68,20 +73,18 @@ public extension Transit {
         Alamofire.request("http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=dc-circulator&r=\(route)&terse").response { response in
             if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                 let xml = SWXMLHash.parse(utf8Text)
-                do {
-                    var stops = [BusStop]()
-                    for elem in xml["body"]["route"]["stop"].all {
+                var stops = [BusStop]()
+                for elem in xml["body"]["route"]["stop"].all {
+                    do {
                         let stopId = try elem.value(ofAttribute: "stopId") as String
                         let name = try elem.value(ofAttribute: "title") as String
                         let lat = try elem.value(ofAttribute: "lat") as Double
                         let lon = try elem.value(ofAttribute: "lon") as Double
-                        stops.append(BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name, circulator: true))
+                        stops.append(BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name, circulator: true, route: route))
                     }
-                    success(stops)
+                    catch {}
                 }
-                catch {
-                    failure(error)
-                }
+                success(stops)
             }
         }
     }
@@ -90,30 +93,34 @@ public extension Transit {
         Alamofire.request("http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=dc-circulator&r=\(route)&terse").response { response in
             if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
                 let xml = SWXMLHash.parse(utf8Text)
-                do {
-                    var tempStops = [String:BusStop]()
-                    var stops = [String:[BusStop]]()
-                    for elem in xml["body"]["route"]["stop"].all {
+                var tempStops = [String:BusStop]()
+                var stops = [String:[BusStop]]()
+                for elem in xml["body"]["route"]["stop"].all {
+                    do {
                         let stopId = try elem.value(ofAttribute: "stopId") as String
                         let name = try elem.value(ofAttribute: "title") as String
                         let lat = try elem.value(ofAttribute: "lat") as Double
                         let lon = try elem.value(ofAttribute: "lon") as Double
                         let tag = try elem.value(ofAttribute: "tag") as String
-                        tempStops[tag] = BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name, circulator: true)
+                        tempStops[tag] = BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name, circulator: true, route:route)
                     }
-                    for route in xml["body"]["route"]["direction"].all {
+                    catch {}
+                }
+                for route in xml["body"]["route"]["direction"].all {
+                    do {
                         let direction = try route.value(ofAttribute: "title") as String
                         stops[direction] = [BusStop]()
                         for elem in route["stop"].all {
-                            let tag = try elem.value(ofAttribute: "tag") as String
-                            stops[direction]!.append(tempStops[tag]!)
+                            do {
+                                let tag = try elem.value(ofAttribute: "tag") as String
+                                stops[direction]!.append(tempStops[tag]!)
+                            }
+                            catch {}
                         }
                     }
-                    success(stops)
+                    catch {}
                 }
-                catch {
-                    failure(error)
-                }
+                success(stops)
             }
         }
     }

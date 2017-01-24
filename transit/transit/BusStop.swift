@@ -30,12 +30,17 @@ open class BusStop {
         circulator = json["Circulator"].bool ?? false
     }
     
-    public init(stopId:String?, latitude:Double?, longitude:Double?, name:String?, circulator:Bool?) {
+    public init(stopId:String?, latitude:Double?, longitude:Double?, name:String?, circulator:Bool?, route:String?) {
         self.stopId = stopId
         self.name = name
         if latitude != nil && longitude != nil {
             self.location = CLLocation(latitude: latitude!, longitude: longitude!)
         }
+        if route != nil {
+            self.routes = [String]()
+            self.routes!.append(route!)
+        }
+        
         self.circulator = circulator
     }
 }
