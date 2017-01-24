@@ -15,6 +15,7 @@ open class BusStop {
     open var location: CLLocation?
     open var name: String?
     open var routes: [String]?
+    open var circulator: Bool?
     
     public init(json: JSON) {
         stopId = json["StopID"].string
@@ -26,13 +27,15 @@ open class BusStop {
                 routes?.append(r.string!)
             }
         }
+        circulator = json["Circulator"].bool ?? false
     }
     
-    public init(stopId:String?, latitude:Double?, longitude:Double?, name:String?) {
+    public init(stopId:String?, latitude:Double?, longitude:Double?, name:String?, circulator:Bool?) {
         self.stopId = stopId
         self.name = name
         if latitude != nil && longitude != nil {
             self.location = CLLocation(latitude: latitude!, longitude: longitude!)
         }
+        self.circulator = circulator
     }
 }
