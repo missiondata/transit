@@ -15,8 +15,10 @@ public extension Transit {
     public func getCirculatorRoutes(success: @escaping([BusRoute]) -> (), failure: @escaping(Error) -> ()) {
         Alamofire.request("http://webservices.nextbus.com/service/publicXMLFeed?command=routeList&a=dc-circulator").response { response in
             if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                
                 var routes = [BusRoute]()
                 let xml = SWXMLHash.parse(utf8Text)
+                
                 do {
                     for elem in xml["body"]["route"].all {
                         let tag = try elem.value(ofAttribute: "tag") as String
@@ -33,6 +35,35 @@ public extension Transit {
         }
     }
     
+    public func getAllCirculatorStops(success: @escaping([BusStop])->(), failure: @escaping(Error)->()) {
+        Alamofire.request("http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=dc-circulator&terse").response { response in
+            if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
+                
+                var stops = [BusStop]()
+                let xml = SWXMLHash.parse(utf8Text)
+                
+                for elem in xml["body"]["route"].all {
+                    for s in elem["stop"].all {
+                        do {
+                            let stopId = try s.value(ofAttribute: "stopId") as String
+                            let name = try s.value(ofAttribute: "title") as String
+                            let lat = try s.value(ofAttribute: "lat") as Double
+                            let lon = try s.value(ofAttribute: "lon") as Double
+                            stops.append(BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name, circulator: true))
+                        }
+                        catch {
+                            debugPrint(error)
+                        }
+                    }
+                }
+                success(stops)
+            }
+            else {
+                // failure()
+            }
+        }
+    }
+    
     public func getCirculatorStopsFor(route:String, success: @escaping([BusStop]) -> (), failure: @escaping (Error) -> ()) {
         Alamofire.request("http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=dc-circulator&r=\(route)&terse").response { response in
             if let data = response.data, let utf8Text = String(data: data, encoding: .utf8) {
@@ -44,7 +75,7 @@ public extension Transit {
                         let name = try elem.value(ofAttribute: "title") as String
                         let lat = try elem.value(ofAttribute: "lat") as Double
                         let lon = try elem.value(ofAttribute: "lon") as Double
-                        stops.append(BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name))
+                        stops.append(BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name, circulator: true))
                     }
                     success(stops)
                 }
@@ -68,7 +99,7 @@ public extension Transit {
                         let lat = try elem.value(ofAttribute: "lat") as Double
                         let lon = try elem.value(ofAttribute: "lon") as Double
                         let tag = try elem.value(ofAttribute: "tag") as String
-                        tempStops[tag] = BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name)
+                        tempStops[tag] = BusStop(stopId: stopId, latitude: lat, longitude: lon, name: name, circulator: true)
                     }
                     for route in xml["body"]["route"]["direction"].all {
                         let direction = try route.value(ofAttribute: "title") as String
