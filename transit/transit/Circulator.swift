@@ -113,7 +113,9 @@ public extension Transit {
                         for elem in route["stop"].all {
                             do {
                                 let tag = try elem.value(ofAttribute: "tag") as String
-                                stops[direction]!.append(tempStops[tag]!)
+                                if let s = tempStops[tag] {
+                                    stops[direction]!.append(s)
+                                }
                             }
                             catch {}
                         }
