@@ -10,6 +10,7 @@
 		9BA1A6C81E2E630100B39481 /* Circulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA1A6C71E2E630100B39481 /* Circulator.swift */; };
 		9BC5A7E31E2FEB0400F5CE6C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BC5A7D61E2FEADD00F5CE6C /* Alamofire.framework */; };
 		9BC9D3881E44FF0000791982 /* SWXMLHash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC9D3871E44FF0000791982 /* SWXMLHash.swift */; };
+		9BC9D38B1E44FFDF00791982 /* SWXMLHash+TypeConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC9D38A1E44FFDF00791982 /* SWXMLHash+TypeConversion.swift */; };
 		9BF996A71C738C4100787DB0 /* transit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9BF996A61C738C4100787DB0 /* transit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9BF996AE1C738C4100787DB0 /* Transit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF996A31C738C4100787DB0 /* Transit.framework */; };
 		9BF996B31C738C4100787DB0 /* transitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF996B21C738C4100787DB0 /* transitTests.swift */; };
@@ -92,6 +93,7 @@
 		9BA1A6C71E2E630100B39481 /* Circulator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Circulator.swift; sourceTree = "<group>"; };
 		9BC5A7CA1E2FEADD00F5CE6C /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = ../Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
 		9BC9D3871E44FF0000791982 /* SWXMLHash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWXMLHash.swift; sourceTree = "<group>"; };
+		9BC9D38A1E44FFDF00791982 /* SWXMLHash+TypeConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SWXMLHash+TypeConversion.swift"; sourceTree = "<group>"; };
 		9BF996A31C738C4100787DB0 /* Transit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Transit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BF996A61C738C4100787DB0 /* transit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = transit.h; sourceTree = "<group>"; };
 		9BF996A81C738C4100787DB0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				9BC9D3871E44FF0000791982 /* SWXMLHash.swift */,
+				9BC9D38A1E44FFDF00791982 /* SWXMLHash+TypeConversion.swift */,
 				9BF996C21C73A43500787DB0 /* Dictionary+Swifter.swift */,
 				9BF996C31C73A43500787DB0 /* JSON.swift */,
 				9BF996C41C73A43500787DB0 /* NSURL+Swifter.swift */,
@@ -405,6 +408,7 @@
 				9BC9D3881E44FF0000791982 /* SWXMLHash.swift in Sources */,
 				9BF996D11C73A43500787DB0 /* NSURL+Swifter.swift in Sources */,
 				9BF996D61C73A43500787DB0 /* WmataHTTPRequest.swift in Sources */,
+				9BC9D38B1E44FFDF00791982 /* SWXMLHash+TypeConversion.swift in Sources */,
 				9BF996D21C73A43500787DB0 /* String+Swifter.swift in Sources */,
 				9BF996BE1C73A3F800787DB0 /* Transit.swift in Sources */,
 				9BA1A6C81E2E630100B39481 /* Circulator.swift in Sources */,
